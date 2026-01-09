@@ -1,66 +1,53 @@
 function gerarPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF("p", "mm", "a4");
 
     const nivel = document.querySelector('input[name="nivel"]:checked').value;
     const paginas = parseInt(document.getElementById("paginas").value);
 
-    const tiposSelecionados = [...document.querySelectorAll('input[type="checkbox"]:checked')]
-        .map(el => el.value);
+    const tipos = [...document.querySelectorAll('input[type="checkbox"]:checked')]
+        .map(e => e.value);
 
-    if (tiposSelecionados.length === 0) {
-        alert("Selecione pelo menos um tipo de questão");
+    if (tipos.length === 0) {
+        alert("Selecione pelo menos um tipo de operação");
         return;
     }
 
-    // ================= NÚMEROS (DÍGITOS) =================
+    // ================= DÍGITOS (KUMON) =================
     function gerarNumero() {
-        let digitos;
+        let d;
+        if (nivel === "facil") d = Math.random() < 0.7 ? 1 : 2;
+        else if (nivel === "medio") d = Math.random() < 0.5 ? 1 : 2;
+        else d = Math.random() < 0.3 ? 1 : Math.random() < 0.6 ? 2 : 3;
 
-        if (nivel === "facil") {
-            digitos = Math.random() < 0.7 ? 1 : 2;
-        } else if (nivel === "medio") {
-            digitos = Math.random() < 0.5 ? 1 : 2;
-        } else {
-            const r = Math.random();
-            digitos = r < 0.3 ? 1 : r < 0.6 ? 2 : 3;
-        }
-
-        const min = digitos === 1 ? 1 : Math.pow(10, digitos - 1);
-        const max = Math.pow(10, digitos) - 1;
+        const min = d === 1 ? 1 : Math.pow(10, d - 1);
+        const max = Math.pow(10, d) - 1;
         return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    // ================= QUESTÃO POR TIPO =================
-    function gerarQuestao(tipo) {
-        let a, b;
+    // ================= QUESTÕES =================
+    function questao(tipo) {
+        let a = gerarNumero();
+        let b = gerarNumero();
 
-        if (tipo === "soma") {
-            a = gerarNumero();
-            b = gerarNumero();
+        if (tipo === "soma")
             return `${a} + ${b} = __________`;
-        }
 
         if (tipo === "sub") {
-            a = gerarNumero();
-            b = gerarNumero();
-            return `${Math.max(a, b)} - ${Math.min(a, b)} = __________`;
+            const x = Math.max(a, b);
+            const y = Math.min(a, b);
+            return `${x} - ${y} = __________`;
         }
 
-        if (tipo === "mult") {
-            a = gerarNumero();
-            b = gerarNumero();
+        if (tipo === "mult")
             return `${a} x ${b} = __________`;
-        }
 
         if (tipo === "div") {
-            a = gerarNumero();
-            b = gerarNumero();
-            return `${a * b} / ${a} = __________`;
+            const r = a * b;
+            return `${r} / ${a} = __________`;
         }
     }
 
-    // ================= TÍTULOS =================
     const titulos = {
         soma: "ADIÇÃO",
         sub: "SUBTRAÇÃO",
@@ -68,32 +55,36 @@ function gerarPDF() {
         div: "DIVISÃO"
     };
 
-    // ================= CRIAR PÁGINA =================
-    function criarPagina(tipo, numPagina) {
-        doc.setFontSize(18);
-        doc.text(titulos[tipo], 105, 20, { align: "center" });
+    // ================= MEIA PÁGINA (A5) =================
+    function desenharMeiaPagina(tipo, xInicio) {
+        doc.setFontSize(16);
+        doc.text(titulos[tipo], xInicio + 52, 20, { align: "center" });
 
-        doc.setFontSize(12);
-        doc.text(`Página ${numPagina}`, 105, 28, { align: "center" });
+        doc.setFontSize(13);
+        let y = 40;
 
-        let y = 45;
-
-        for (let i = 1; i <= 20; i++) {
-            doc.text(`${i}) ${gerarQuestao(tipo)}`, 30, y);
-            y += 12;
+        for (let i = 1; i <= 10; i++) {
+            doc.text(`${i}) ${questao(tipo)}`, xInicio + 12, y);
+            y += 14; // espaço bom para escrita
         }
     }
 
+
     // ================= GERAR PDF =================
-    let paginaAtual = 1;
+    let indice = 0;
 
-    tiposSelecionados.forEach(tipo => {
-        for (let p = 1; p <= paginas; p++) {
-            if (paginaAtual > 1) doc.addPage();
-            criarPagina(tipo, p);
-            paginaAtual++;
-        }
-    });
+    for (let p = 0; p < paginas; p++) {
+        if (p > 0) doc.addPage();
 
-    doc.save("atividades_matematica_estilo_kumon.pdf");
+        if (tipos[indice])
+            desenharMeiaPagina(tipos[indice], 0);
+
+        if (tipos[indice + 1])
+            desenharMeiaPagina(tipos[indice + 1], 105);
+
+        indice += 2;
+        if (indice >= tipos.length) indice = 0;
+    }
+
+    doc.save("atividades_estilo_kumon_A5_em_A4.pdf");
 }

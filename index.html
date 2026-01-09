@@ -3,8 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Atividades</title>
+    <title>Gerador Kumon</title>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -12,31 +11,34 @@
 </head>
 
 <body>
-
     <div class="container">
 
-        <img src="./Arandu-logo.png" class="logo">
+        <img src="./books_2077767.png" class="logo">
+        <h1>Gerador de Atividades Estilo Kumon</h1>
 
-        <h1>Gerador de Atividades</h1>
-
-        <!-- Dificuldade -->
+        <!-- NÍVEL -->
         <div class="box">
-            <h3>Dificuldade</h3>
-            <label><input type="radio" name="nivel" value="facil" checked> Fácil</label>
-            <label><input type="radio" name="nivel" value="medio"> Médio</label>
-            <label><input type="radio" name="nivel" value="dificil"> Difícil</label>
+            <h3>Nível Kumon</h3>
+            <select id="nivel">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+            </select>
         </div>
 
-        <!-- Tipos -->
+        <!-- OPERAÇÃO -->
         <div class="box">
-            <h3>Tipos de Questões</h3>
-            <label><input type="checkbox" value="soma" checked> Somatório</label>
-            <label><input type="checkbox" value="sub"> Subtração</label>
-            <label><input type="checkbox" value="mult"> Multiplicação</label>
-            <label><input type="checkbox" value="div"> Divisão</label>
+            <h3>Tipo de Operação</h3>
+            <label><input type="radio" name="operacao" value="Adição" checked> Adição</label>
+            <label><input type="radio" name="operacao" value="Subtração"> Subtração</label>
+            <label><input type="radio" name="operacao" value="Multiplicação"> Multiplicação</label>
+            <label><input type="radio" name="operacao" value="Divisão"> Divisão</label>
         </div>
 
-        <!-- Páginas -->
+        <!-- PÁGINAS -->
         <div class="box">
             <h3>Páginas</h3>
             <input type="number" id="paginas" min="1" max="10" value="2">
@@ -44,6 +46,7 @@
 
         <button onclick="gerarPDF()">📄 Gerar PDF</button>
 
+        <div id="preview-area"></div>
     </div>
 
     <script src="script.js"></script>

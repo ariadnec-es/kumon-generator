@@ -1,90 +1,113 @@
 function gerarPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF("p", "mm", "a4");
+    const doc = new jsPDF("l", "mm", "a4");
 
-    const nivel = document.querySelector('input[name="nivel"]:checked').value;
+    const nivel = document.getElementById("nivel").value;
     const paginas = parseInt(document.getElementById("paginas").value);
+    const operacao = document.querySelector('input[name="operacao"]:checked').value;
 
-    const tipos = [...document.querySelectorAll('input[type="checkbox"]:checked')]
-        .map(e => e.value);
+    /* ================= CABEÇALHO ================= */
+    function cabecalho() {
+        doc.setFontSize(11);
+        doc.text("Nome:", 10, 15);
+        doc.line(30, 15, 100, 15);
 
-    if (tipos.length === 0) {
-        alert("Selecione pelo menos um tipo de operação");
-        return;
+        doc.text("Data:", 10, 22);
+        doc.line(30, 22, 100, 22);
+
+        doc.text("Hora:", 10, 29);
+        doc.line(30, 29, 55, 29);
+        doc.text("às", 58, 29);
+        doc.line(65, 29, 90, 29);
     }
 
-    // ================= DÍGITOS (KUMON) =================
+    /* ================= NÚMEROS – REGRAS KUMON ================= */
     function gerarNumero() {
-        let d;
-        if (nivel === "facil") d = Math.random() < 0.7 ? 1 : 2;
-        else if (nivel === "medio") d = Math.random() < 0.5 ? 1 : 2;
-        else d = Math.random() < 0.3 ? 1 : Math.random() < 0.6 ? 2 : 3;
-
-        const min = d === 1 ? 1 : Math.pow(10, d - 1);
-        const max = Math.pow(10, d) - 1;
-        return Math.floor(Math.random() * (max - min + 1)) + min;
+        if (nivel === "A") return Math.floor(Math.random() * 9) + 1;
+        if (nivel === "B") return Math.floor(Math.random() * 9) + 1;
+        if (nivel === "C") return Math.floor(Math.random() * 90) + 10;
+        if (nivel === "D") return Math.floor(Math.random() * 5) + 1;
+        if (nivel === "E") return Math.floor(Math.random() * 9) + 1;
+        return Math.floor(Math.random() * 9) + 2; // F
     }
 
-    // ================= QUESTÕES =================
-    function questao(tipo) {
+    function gerarConta() {
         let a = gerarNumero();
         let b = gerarNumero();
+        let op;
 
-        if (tipo === "soma")
-            return `${a} + ${b} = __________`;
+        switch (operacao) {
+            case "Adição":
+                op = "+";
+                if (nivel === "A") b = Math.min(b, 9 - a); // sem vai-um
+                break;
 
-        if (tipo === "sub") {
-            const x = Math.max(a, b);
-            const y = Math.min(a, b);
-            return `${x} - ${y} = __________`;
+            case "Subtração":
+                op = "-";
+                if (nivel === "A") b = Math.min(b, a); // sem negativo
+                [a, b] = [Math.max(a, b), Math.min(a, b)];
+                break;
+
+            case "Multiplicação":
+                op = "×";
+                if (nivel === "D") {
+                    a = Math.floor(Math.random() * 5) + 1;
+                    b = Math.floor(Math.random() * 5) + 1;
+                }
+                if (nivel === "E") {
+                    a = Math.floor(Math.random() * 4) + 6;
+                    b = Math.floor(Math.random() * 4) + 6;
+                }
+                break;
+
+            case "Divisão":
+                op = "÷";
+                b = gerarNumero();
+                const r = Math.floor(Math.random() * 9) + 1;
+                a = b * r; // divisão exata
+                break;
         }
 
-        if (tipo === "mult")
-            return `${a} x ${b} = __________`;
+        return { a, b, op };
+    }
 
-        if (tipo === "div") {
-            const r = a * b;
-            return `${r} / ${a} = __________`;
+    /* ================= QUESTÕES ================= */
+    function desenharQuestoes(x, inicio) {
+        let y = 60;
+
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text(
+            `${operacao.toUpperCase()} – NÍVEL ${nivel}`,
+            x + 10,
+            45
+        );
+
+        for (let i = 0; i < 10; i++) {
+            const c = gerarConta();
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
+            doc.text(`(${inicio + i})`, x + 10, y);
+
+            doc.setFontSize(24);
+            doc.text(String(c.a).padStart(3, " "), x + 30, y);
+            doc.text(c.op, x + 55, y);
+            doc.text(String(c.b).padStart(3, " "), x + 70, y);
+            doc.text("=", x + 95, y);
+
+            y += 12;
         }
     }
 
-    const titulos = {
-        soma: "ADIÇÃO",
-        sub: "SUBTRAÇÃO",
-        mult: "MULTIPLICAÇÃO",
-        div: "DIVISÃO"
-    };
-
-    // ================= MEIA PÁGINA (A5) =================
-    function desenharMeiaPagina(tipo, xInicio) {
-        doc.setFontSize(16);
-        doc.text(titulos[tipo], xInicio + 52, 20, { align: "center" });
-
-        doc.setFontSize(13);
-        let y = 40;
-
-        for (let i = 1; i <= 10; i++) {
-            doc.text(`${i}) ${questao(tipo)}`, xInicio + 12, y);
-            y += 14; // espaço bom para escrita
-        }
-    }
-
-
-    // ================= GERAR PDF =================
-    let indice = 0;
-
+    /* ================= GERAR PDF ================= */
     for (let p = 0; p < paginas; p++) {
         if (p > 0) doc.addPage();
 
-        if (tipos[indice])
-            desenharMeiaPagina(tipos[indice], 0);
-
-        if (tipos[indice + 1])
-            desenharMeiaPagina(tipos[indice + 1], 105);
-
-        indice += 2;
-        if (indice >= tipos.length) indice = 0;
+        cabecalho();
+        desenharQuestoes(0, 1);       // 1–10
+        desenharQuestoes(148.5, 11);  // 11–20
     }
 
-    doc.save("atividades_estilo_kumon_A5_em_A4.pdf");
+    doc.save(`kumon_${operacao}_nivel_${nivel}.pdf`);
 }

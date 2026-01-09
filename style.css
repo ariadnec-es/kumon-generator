@@ -12,8 +12,8 @@ body {
 }
 
 .logo {
-    width: 120px;
-    margin-bottom: 15px;
+    width: 300px;
+    margin-bottom: 0px;
 }
 
 .box {
@@ -42,4 +42,74 @@ button {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+}
+
+.a4 {
+    width: 297mm;
+    height: 210mm;
+    background: white;
+    margin: 20px auto;
+    padding: 15mm;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+    font-family: Arial, sans-serif;
+}
+
+.pagina {
+    display: flex;
+    height: 100%;
+}
+
+.metade {
+    width: 50%;
+    padding: 10mm;
+    box-sizing: border-box;
+}
+
+.cabecalho {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.logo {
+    float: right;
+    width: 60px;
+}
+
+.titulo {
+    text-align: left;
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.questao {
+    font-size: 16px;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+
+
+@media (max-width: 768px) {
+    .a4 {
+        width: 100%;
+        height: auto;
+    }
+
+    .pagina {
+        flex-direction: column;
+    }
+
+    .metade {
+        width: 100%;
+    }
+
+    @page {
+        size: A4 landscape;
+        margin: 15mm;
+    }
+
+    body {
+        margin: 0;
+    }
 }

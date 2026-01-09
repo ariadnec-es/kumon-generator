@@ -4,14 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Atividades – Estilo Kumon</title>
+    <title>Gerador de Atividades</title>
 
-    <!-- jsPDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-    <!-- Fonte Google -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -19,10 +15,32 @@
 
     <div class="container">
 
-        <img src="./Arandu-logo.png" alt="Logo" class="logo">
+        <img src="./Arandu-logo.png" class="logo">
 
         <h1>Gerador de Atividades</h1>
-        <p>Multiplicação e Divisão • Estilo Kumon</p>
+
+        <!-- Dificuldade -->
+        <div class="box">
+            <h3>Dificuldade</h3>
+            <label><input type="radio" name="nivel" value="facil" checked> Fácil</label>
+            <label><input type="radio" name="nivel" value="medio"> Médio</label>
+            <label><input type="radio" name="nivel" value="dificil"> Difícil</label>
+        </div>
+
+        <!-- Tipos -->
+        <div class="box">
+            <h3>Tipos de Questões</h3>
+            <label><input type="checkbox" value="soma" checked> Somatório</label>
+            <label><input type="checkbox" value="sub"> Subtração</label>
+            <label><input type="checkbox" value="mult"> Multiplicação</label>
+            <label><input type="checkbox" value="div"> Divisão</label>
+        </div>
+
+        <!-- Páginas -->
+        <div class="box">
+            <h3>Páginas</h3>
+            <input type="number" id="paginas" min="1" max="10" value="2">
+        </div>
 
         <button onclick="gerarPDF()">📄 Gerar PDF</button>
 

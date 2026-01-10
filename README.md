@@ -58,9 +58,8 @@ Os níveis seguem a progressão pedagógica do **Kumon**, aumentando gradualment
 - O professor pode **selecionar manualmente o tipo de operação**, mantendo a dificuldade adequada ao nível.
 - O foco é desenvolver **autonomia e confiança** da criança.
 
-## 🌐 Acesse o Gerador Online
-
-👉 **Clique no botão abaixo para acessar o gerador de atividades:**
+## Acesse o Gerador Online
+**Clique no botão abaixo para acessar o gerador de atividades:**
 
 <p align="center">
   <a href="https://ariadnec-es.github.io/operations-generator/" target="_blank ">

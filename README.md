@@ -29,7 +29,7 @@ Cada folha contém:
 - Título com:
   - Tipo da operação
   - Nível selecionado
-- **20 questões por página**
+- 20 questões por página
   - 10 na metade esquerda
   - 10 na metade direita
 - Formato ideal para dobrar a folha e formar um “livro A5”
@@ -51,7 +51,7 @@ Os níveis seguem a progressão pedagógica do **Kumon**, aumentando gradualment
 
 ---
 
-### 📌 Observações pedagógicas
+### Observações pedagógicas
 
 - A progressão é gradual, focando em fluidez e precisão, não velocidade inicial.
 - A divisão é sempre exata, evitando restos, conforme a metodologia Kumon.
